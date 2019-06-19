@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------------
 
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 
 import * as searchView from './views/searchView';
 
@@ -67,3 +68,12 @@ DOMelements.searchResPages.addEventListener('click', e => {
     searchView.renderResults(state.search.result, goToPage);//paginated list of recipes
   }
 });
+
+
+/** ***************************************************************************
+ * RECIPE CONTROLLER
+ */
+// For testing
+const r = new Recipe(47107);
+// r.getRecipe();
+// console.log(r);
