@@ -16,7 +16,7 @@ const renderRecipe = recipe => {
                   <img src="${recipe.image_url}" alt="${recipe.title}">
               </figure>
               <div class="results__data">
-                  <h4 class="results__name">${recipe.title}</h4>
+                  <h4 class="results__name">${limitRecipeTitle(recipe.title)}</h4>
                   <p class="results__author">${recipe.publisher}</p>
               </div>
           </a>
@@ -26,6 +26,34 @@ const renderRecipe = recipe => {
   // render it to the DOM
   DOMelements.searchResList.insertAdjacentHTML('beforeend', markup);
 };
+
+
+// Reduce title size to occupy only 1 line while also not breaking any word.
+// ----------------------------------------------------------------------------
+// Example with title 'Pasta with tomato and spinach'. 
+// Splits into 5 words, Reduce will carry out 5 iterations:
+//   acc: 0  / acc + cur.length = 5  / newTitle = ['Pasta']
+//   acc: 5  / acc + cur.length = 9  / newTitle = ['Pasta', 'with']
+//   acc: 9  / acc + cur.length = 15 / newTitle = ['Pasta', 'with', 'tomato']
+//   acc: 15 / acc + cur.length = 18 / newTitle = ['Pasta', 'with', 'tomato']
+//   acc: 18 / acc + cur.length = 24 / newTitle = ['Pasta', 'with', 'tomato']
+// ----------------------------------------------------------------------------
+export const limitRecipeTitle = (title, limit = 17) => {
+  const newTitle = [];
+
+  if (title.length > limit) {
+      title.split(' ').reduce((acc, cur) => {
+          if (acc + cur.length <= limit) {
+              newTitle.push(cur);
+          }
+          return acc + cur.length;
+      }, 0);
+
+      // return the result
+      return `${newTitle.join(' ')} ...`;
+  }
+  return title;
+}
 
 
 // ****************************************************************************
