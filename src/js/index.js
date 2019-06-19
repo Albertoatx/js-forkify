@@ -44,8 +44,26 @@ const controlSearch = async () => {
   }
 }
 
+// ----------------------------------------------------------------------------
+// EVENT LISTENERS (in the controller is where we have all our event listeners)
+// ----------------------------------------------------------------------------
+
 // Event listener for the search form
 DOMelements.searchForm.addEventListener('submit', e => {
   e.preventDefault();  // prevent the page reloading when we submit the form
   controlSearch();
+});
+
+// Event listener for the click on pagination buttons
+DOMelements.searchResPages.addEventListener('click', e => {
+
+  // regardless of where we click on the button, target always .btn-inline markup
+  const btn = e.target.closest('.btn-inline'); 
+
+  if (btn) {
+    const goToPage = parseInt(btn.dataset.goto, 10);// read 'data-goto' attribute
+
+    searchView.clearResults();
+    searchView.renderResults(state.search.result, goToPage);//paginated list of recipes
+  }
 });

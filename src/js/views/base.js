@@ -8,6 +8,7 @@ export const DOMelements = {
   searchInput: document.querySelector('.search__field'),
   searchRes: document.querySelector('.results'),
   searchResList: document.querySelector('.results__list'),
+  searchResPages: document.querySelector('.results__pages'),
 };
 
 // Central place where we have all DOM strings that we need in our app

@@ -56,6 +56,53 @@ export const limitRecipeTitle = (title, limit = 17) => {
 }
 
 
+// Renders Pagination buttons into the DOM
+// ----------------------------------------------------------------------------
+const renderPaginationButtons = (page, numResults, resPerPage) => {
+
+  const numPages = Math.ceil(numResults / resPerPage);
+  let button;
+
+  // If first page && more than 1 page -> Render only button to next page
+  // If last  page && more than 1 page -> Render only button to previous page
+  // If we are in any other page       -> Render both buttons (previous, next)
+  if (page === 1 && numPages > 1) {
+      // next page button
+      button = createPaginationButton(page, 'next');
+
+  } else if (page < numPages) {
+      // both buttons
+      button = `
+        ${createPaginationButton(page, 'prev')}
+        ${createPaginationButton(page, 'next')}
+      `;
+
+  } else if (page === numPages && numPages > 1) {
+      // prev page button
+      button = createPaginationButton(page, 'prev');
+  }
+
+  // render to the DOM
+  DOMelements.searchResPages.insertAdjacentHTML('afterbegin', button);
+};
+
+
+// Create a Pagination button markup depending on the type: 'prev' or 'next'
+// ----------------------------------------------------------------------------
+const createPaginationButton = (page, type) => `
+  <button 
+    class="btn-inline results__btn--${type}" 
+    data-goto=${type === 'prev' ? page - 1 : page + 1}
+  >
+    <span>Page ${type === 'prev' ? page - 1 : page + 1}</span>
+    <svg class="search__icon">
+      <use href="img/icons.svg#icon-triangle-${type === 'prev' ? 'left' : 'right'}">
+      </use>
+    </svg>
+  </button>
+`;
+
+
 // ****************************************************************************
 //                               EXPORTED functions
 // ****************************************************************************
@@ -73,13 +120,20 @@ export const clearSearchInput = () => {
 
 // Send the list of recipes to be rendered by the 'renderRecipe' function 
 // ----------------------------------------------------------------------------
-export const renderResults = (recipes) => {
-  recipes.forEach(renderRecipe); // recipes.forEach(el => renderRecipe(el));
+export const renderResults = (recipes, page = 1, resPerPage = 10) => {
+  const start = (page - 1) * resPerPage;
+  const end   = page * resPerPage;
+
+  recipes.slice(start, end).forEach(renderRecipe); //.forEach(el => renderRecipe(el));
+
+  // render the pagination buttons
+  renderPaginationButtons(page, recipes.length, resPerPage);
 };
 
 // Clear the list of recipes from a previous search
 // ---------------------------------------------------------------------------
 export const clearResults = () => {
   DOMelements.searchResList.innerHTML = '';
+  DOMelements.searchResPages.innerHTML = ''; // clear pagination buttons
 };
 
