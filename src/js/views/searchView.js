@@ -137,3 +137,19 @@ export const clearResults = () => {
   DOMelements.searchResPages.innerHTML = ''; // clear pagination buttons
 };
 
+
+// Select the recipe from the list of recipes that must be highlighted 
+// ---------------------------------------------------------------------------
+export const highlightSelected = id => {
+
+  // remove the active class from any recipe in the list
+  const resultsArr = Array.from(document.querySelectorAll('.results__link'));
+  resultsArr.forEach(el => {
+      el.classList.remove('results__link--active');
+  });
+
+  // select the recipe using its id and add an active class
+  document.querySelector(`.results__link[href*="${id}"]`).classList.add('results__link--active');
+};
+
+
