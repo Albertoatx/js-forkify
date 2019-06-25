@@ -4,6 +4,7 @@
 
 import Search from './models/Search';
 import Recipe from './models/Recipe';
+import ShoppingList from './models/ShoppingList';
 
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
@@ -94,6 +95,11 @@ const controlRecipe = async () => {
   }
 };
 
+
+/** ***************************************************************************
+ * SHOPPING LIST CONTROLLER
+ */
+window.sl = new ShoppingList();
 
 
 // ****************************************************************************

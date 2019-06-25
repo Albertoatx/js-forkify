@@ -10,6 +10,7 @@ export const DOMelements = {
   searchResList: document.querySelector('.results__list'),
   searchResPages: document.querySelector('.results__pages'),
   recipe: document.querySelector('.recipe'),
+  shopping: document.querySelector('.shopping__list'),
 };
 
 // Central place where we have all DOM strings that we need in our app
