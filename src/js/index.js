@@ -51,30 +51,6 @@ const controlSearch = async () => {
   }
 }
 
-// ----------------------------------------------------------------------------
-// EVENT LISTENERS (in the controller is where we have all our event listeners)
-// ----------------------------------------------------------------------------
-
-// Event listener for the search form
-DOMelements.searchForm.addEventListener('submit', e => {
-  e.preventDefault();  // prevent the page reloading when we submit the form
-  controlSearch();
-});
-
-// Event listener for the click on pagination buttons
-DOMelements.searchResPages.addEventListener('click', e => {
-
-  // regardless of where we click on the button, target always .btn-inline markup
-  const btn = e.target.closest('.btn-inline'); 
-
-  if (btn) {
-    const goToPage = parseInt(btn.dataset.goto, 10);// read 'data-goto' attribute
-
-    searchView.clearResults();
-    searchView.renderResults(state.search.result, goToPage);//paginated list of recipes
-  }
-});
-
 
 /** ***************************************************************************
  * RECIPE CONTROLLER
@@ -118,7 +94,59 @@ const controlRecipe = async () => {
   }
 };
 
+
+
+// ****************************************************************************
+// EVENT LISTENERS (in the controller is where we have all our event listeners)
+// ****************************************************************************
+
+// Event listener for the search form (calls the Search Controller)
+// ----------------------------------------------------------------------------
+DOMelements.searchForm.addEventListener('submit', e => {
+  e.preventDefault();  // prevent the page reloading when we submit the form
+  controlSearch();
+});
+
+
+// Event listener for the click on pagination buttons
+// ----------------------------------------------------------------------------
+DOMelements.searchResPages.addEventListener('click', e => {
+
+  // regardless of where we click on the button, target always .btn-inline markup
+  const btn = e.target.closest('.btn-inline'); 
+
+  if (btn) {
+    const goToPage = parseInt(btn.dataset.goto, 10);// read 'data-goto' attribute
+
+    searchView.clearResults();
+    searchView.renderResults(state.search.result, goToPage);//paginated list of recipes
+  }
+});
+
 // Event listeners for the 'hashchange' in the URL and the 'load' of the page
+// (both call the Recipe controller)
+// ----------------------------------------------------------------------------
 //window.addEventListener('hashchange', controlRecipe);
 //window.addEventListener('load', controlRecipe);
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
+
+
+// Event listener for all the buttons in the recipe detail
+// ----------------------------------------------------------------------------
+DOMelements.recipe.addEventListener('click', e => {
+
+  // Decrease button is clicked (or any child element of that button)
+  if (e.target.matches('.btn-decrease, .btn-decrease *')) {
+      if (state.recipe.servings > 1) { // avoid having negative servings
+          state.recipe.updateServings('dec');
+          recipeView.updateServingsIngredients(state.recipe);
+      }
+  } 
+  // Increase button is clicked (or any child element of that button)
+  else if (e.target.matches('.btn-increase, .btn-increase *')) {
+      state.recipe.updateServings('inc');
+      recipeView.updateServingsIngredients(state.recipe);
+  } 
+
+  //console.log(state.recipe);
+});
