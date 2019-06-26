@@ -8,6 +8,7 @@ import ShoppingList from './models/ShoppingList';
 
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
+import * as shopListView from './views/shoppingListView';
 
 import { DOMelements, renderSpinner, clearSpinner } from './views/base';
 
@@ -18,6 +19,7 @@ import { DOMelements, renderSpinner, clearSpinner } from './views/base';
  * - Liked recipes
  */
 const state = {};
+window.state = state;  // only for testing purposes
 
 
 /** ***************************************************************************
@@ -99,7 +101,17 @@ const controlRecipe = async () => {
 /** ***************************************************************************
  * SHOPPING LIST CONTROLLER
  */
-window.sl = new ShoppingList();
+const controlShoppingList = () => {
+  // Create a new list in our state object only IF there is none yet
+  if (!state.shopList) state.shopList = new ShoppingList();
+
+  // Add each ingredient of a recipe to the shopping list and UI
+  state.recipe.ingredients.forEach(el => {
+      const item = state.shopList.addItem(el.count, el.unit, el.ingredient);
+      shopListView.renderItem(item);
+  });
+}
+
 
 
 // ****************************************************************************
@@ -153,6 +165,35 @@ DOMelements.recipe.addEventListener('click', e => {
       state.recipe.updateServings('inc');
       recipeView.updateServingsIngredients(state.recipe);
   } 
+  // Add recipe to shoppinglist button (or any child element of that button)
+  else if (e.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
+      controlShoppingList();
+  } 
 
   //console.log(state.recipe);
+});
+
+
+// Event listener to handle delete and update items from the shopping list
+// ----------------------------------------------------------------------------
+DOMelements.shopping.addEventListener('click', e => {
+  // retrieve the id from the element that we click on (wherever we click)
+  const id = e.target.closest('.shopping__item').dataset.itemid;
+
+  // Handle the delete button
+  if (e.target.matches('.shopping__delete, .shopping__delete *')) {
+      // Delete from state
+      state.shopList.deleteItem(id);
+
+      // Delete from UI
+      shopListView.deleteItem(id);
+  } 
+  // Handle the count update button
+  else if (e.target.matches('.shopping__count-value')) {
+      // retrieve the new count value from the UI
+      const value = parseFloat(e.target.value, 10);
+
+      // Update it in the state
+      state.shopList.updateCount(id, value);
+  }
 });
