@@ -10,6 +10,7 @@ import Likes  from './models/Likes';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import * as shopListView from './views/shoppingListView';
+import * as likesView  from './views/likesView';
 
 import { DOMelements, renderSpinner, clearSpinner } from './views/base';
 
@@ -88,7 +89,7 @@ const controlRecipe = async () => {
   
         // 7) Render recipe
         clearSpinner();
-        recipeView.renderRecipe(state.recipe);
+        recipeView.renderRecipe(state.recipe, state.likes.isLiked(id));
         console.log(state.recipe);
         
       } catch (error) {
@@ -117,6 +118,9 @@ const controlShoppingList = () => {
 /** ***************************************************************************
  * LIKES CONTROLLER
  */
+state.likes = new Likes();// ONLY FOR TESTING while persistence not implemented
+likesView.toggleLikeMenu(state.likes.getNumLikes()); // ONLY for TESTING
+
 const controlLike = () => {
 
   // Create a like list in our state object only IF there is none yet
@@ -136,9 +140,11 @@ const controlLike = () => {
       );
 
       // Toggle the like button
-      
+      likesView.toggleLikeBtn(true);
+
       // Add like to UI list
-      console.log(state.likes);
+      likesView.renderLike(newLike);
+      //console.log(state.likes);
 
   // User HAS liked current recipe
   } else {
@@ -147,11 +153,15 @@ const controlLike = () => {
       state.likes.deleteLike(currentID);
 
       // Toggle the like button
+      likesView.toggleLikeBtn(false);
       
       // Remove like from UI list
-      console.log(state.likes);
+      likesView.deleteLike(currentID);
+      //console.log(state.likes);
   }
 
+  // ensure that the heart menu is only displayed when there is actually a like
+  likesView.toggleLikeMenu(state.likes.getNumLikes());
 };
 
 
