@@ -21,7 +21,7 @@ import { DOMelements, renderSpinner, clearSpinner } from './views/base';
  * - Liked recipes
  */
 const state = {};
-window.state = state;  // only for testing purposes
+//window.state = state;  // only for testing purposes
 
 
 /** ***************************************************************************
@@ -30,7 +30,7 @@ window.state = state;  // only for testing purposes
 const controlSearch = async () => {
   // 1) Get query from the view
   const query = searchView.getSearchInput();
-  console.log(query);
+  //console.log(query);
   
   if (query) {
       // 2) New search object and add to state
@@ -90,7 +90,7 @@ const controlRecipe = async () => {
         // 7) Render recipe
         clearSpinner();
         recipeView.renderRecipe(state.recipe, state.likes.isLiked(id));
-        console.log(state.recipe);
+        //console.log(state.recipe);
         
       } catch (error) {
         clearSpinner();
