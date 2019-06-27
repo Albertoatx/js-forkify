@@ -118,8 +118,8 @@ const controlShoppingList = () => {
 /** ***************************************************************************
  * LIKES CONTROLLER
  */
-state.likes = new Likes();// ONLY FOR TESTING while persistence not implemented
-likesView.toggleLikeMenu(state.likes.getNumLikes()); // ONLY for TESTING
+//state.likes = new Likes();// ONLY FOR TESTING while persistence not implemented
+//likesView.toggleLikeMenu(state.likes.getNumLikes()); // ONLY for TESTING
 
 const controlLike = () => {
 
@@ -168,6 +168,24 @@ const controlLike = () => {
 // ****************************************************************************
 // EVENT LISTENERS (in the controller is where we have all our event listeners)
 // ****************************************************************************
+
+
+// Event listener to restore the 'liked' recipes on page load
+// ----------------------------------------------------------------------------
+window.addEventListener('load', () => {
+  // each time the page loads create a new likes object
+  state.likes = new Likes();
+  
+  // Restore likes
+  state.likes.readStorage();
+
+  // Toggle like menu button
+  likesView.toggleLikeMenu(state.likes.getNumLikes());
+
+  // Render the existing likes
+  state.likes.likes.forEach(like => likesView.renderLike(like));
+});
+
 
 // Event listener for the search form (calls the Search Controller)
 // ----------------------------------------------------------------------------
