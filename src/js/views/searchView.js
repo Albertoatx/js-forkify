@@ -61,29 +61,34 @@ export const limitRecipeTitle = (title, limit = 17) => {
 const renderPaginationButtons = (page, numResults, resPerPage) => {
 
   const numPages = Math.ceil(numResults / resPerPage);
-  let button;
+  
+  // Only render pagination buttons if more than 1 page of results
+  if (numPages > 1) {
+    let button;
 
-  // If first page && more than 1 page -> Render only button to next page
-  // If last  page && more than 1 page -> Render only button to previous page
-  // If we are in any other page       -> Render both buttons (previous, next)
-  if (page === 1 && numPages > 1) {
-      // next page button
-      button = createPaginationButton(page, 'next');
-
-  } else if (page < numPages) {
-      // both buttons
-      button = `
-        ${createPaginationButton(page, 'prev')}
-        ${createPaginationButton(page, 'next')}
-      `;
-
-  } else if (page === numPages && numPages > 1) {
-      // prev page button
-      button = createPaginationButton(page, 'prev');
+    // If first page && more than 1 page -> Render only button to next page
+    // If last  page && more than 1 page -> Render only button to previous page
+    // If we are in any other page       -> Render both buttons (previous, next)
+    if (page === 1) {
+        // next page button
+        button = createPaginationButton(page, 'next');
+  
+    } else if (page < numPages) {
+        // both buttons
+        button = `
+          ${createPaginationButton(page, 'prev')}
+          ${createPaginationButton(page, 'next')}
+        `;
+  
+    } else if (page === numPages) {
+        // prev page button
+        button = createPaginationButton(page, 'prev');
+    }
+  
+    // render to the DOM
+    DOMelements.searchResPages.insertAdjacentHTML('afterbegin', button);
   }
 
-  // render to the DOM
-  DOMelements.searchResPages.insertAdjacentHTML('afterbegin', button);
 };
 
 
