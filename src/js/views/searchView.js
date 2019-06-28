@@ -153,8 +153,11 @@ export const highlightSelected = id => {
       el.classList.remove('results__link--active');
   });
 
-  // select the recipe using its id and add an active class
-  document.querySelector(`.results__link[href*="${id}"]`).classList.add('results__link--active');
+  // select the recipe using its id 
+  const recipe = document.querySelector(`.results__link[href*="${id}"]`);
+
+  // if recipe is in the result list then add an active class to highlight it
+  if (recipe) recipe.classList.add('results__link--active');
 };
 
 
